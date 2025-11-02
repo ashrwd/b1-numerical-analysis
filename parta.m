@@ -9,7 +9,7 @@ phi = 0.5; % Phase
 rng(1) % Set seed for reproducibility
 sigma = 0.01; % Noise Standard Deviation
 
-t = [0:dt:T]; % Base time array
+t = 0:dt:T; % Base time array
 
 K = [1 2 4 8 16 32 64 128]; % Sub-sampling factors
 H = K * dt; % Effective steps
@@ -41,18 +41,17 @@ for i = 1:length(K)
     h = H(i);
 
     % Forward Derivative
-    y_f{i} = ( y(1+k:end) - y(1:end-k) )/h;
-    t_f{i} = t(1:end-k);
-    y_true_f = y_true(1:end-k);
+    [t_f{i}, y_f{i}] = forward_derivative(t,y,k,h);
 
     % Backward Derivative
-    y_b{i} = ( y(1+k:end) - y(1:end-k) ) / h;  
-    t_b{i} = t(1+k:end);
-    y_true_b = y_true(1+k:end);
+    [t_b{i}, y_b{i}] = backward_derivative(t,y,k,h);
 
     % Central Derivative
-    y_c{i} = ( y(1+2*k:end) - y(1:end-2*k) ) / (2*h);
-    t_c{i} = t(1+k:end-k);
+    [t_c{i}, y_c{i}] = central_derivative(t,y,k,h);
+
+    % Truncate arrays of true y values to match
+    y_true_f = y_true(1:end-k);
+    y_true_b = y_true(1+k:end);
     y_true_c = y_true(1+k:end-k);
 
     % L2 error norms
