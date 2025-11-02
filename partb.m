@@ -31,12 +31,12 @@ end
 
 %% Vandermonde Polynomial Fitting
 
-maxDeg = 10 % Highest degree polynomial
+maxDeg = 10; % Highest degree polynomial
 
 % Cells to store results of Vandermonde Fitting
 Yfit = cell(maxDeg,1); % Polynomial curves
 Coefficients = cell(maxDeg,1); % Coefficients
-condV = cell(maxDeg,1); % Condition number of V'V
+condV = zeros(maxDeg,1); % Condition number of V'V
 
 N = length(t);
 
@@ -53,14 +53,50 @@ for m = 1:maxDeg
 
     Coefficients{m} = c; % Store Coefficients
     Yfit{m} = V * c; % Store Polynomial curve    
-    condV{m} = cond(V' * V); % Store condition number V'V
+    condV(m) = cond(V' * V); % Store condition number V'V
+end
+
+%% Derivatives
+
+% Create cells to store derivative coefficients and curves
+Coefficients_der = cell(maxDeg,1);
+Yfit_der = cell(maxDeg,1);
+
+for i=1:maxDeg
+
+    coefficients = flip(Coefficients{i}) % Coefficients flipped to match polyder convention
+
+    derivative_coefficients = polyder(coefficients); % Analytical derivative
+
+    Coefficients_der{i} = derivative_coefficients; % Store derivative Coefficients
+
+    Yfit_der{i} = polyval(derivative_coefficients,t); % Compute Derivative curve
 end
 
 
-%% Plotting Polynomials
-hold on
-plot(t,y_true_signal)
-for i=1:10
-    plot(t,Yfit{i})
-    pause(1)
-end
+
+%% Plots
+
+% ----- All polynomials and true signal ---------
+%plot(t,y_true_signal)
+%for i=1:10
+%    hold on
+%    plot(t,Yfit{i})
+%end
+
+% --------- Condition number against m ----------
+
+%bar(1:maxDeg, condV); % Bar chart (m discrete)
+
+%set(gca,'YScale','log'); % Logarithmic Y-axis
+
+%xlabel('m (polynomial degree)');
+%ylabel("cond(V'V)");
+
+%title("cond(V'V) against polynomial degree");
+
+% -------- L2 Error of polynomial fit ------------
+
+
+
+
