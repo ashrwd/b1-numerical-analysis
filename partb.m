@@ -61,17 +61,24 @@ end
 % Create cells to store derivative coefficients and curves
 Coefficients_der = cell(maxDeg,1);
 Yfit_der = cell(maxDeg,1);
+derivative_errors = zeros(maxDeg,1);
 
+% Analytical derivative finding
 for i=1:maxDeg
 
-    coefficients = flip(Coefficients{i}) % Coefficients flipped to match polyder convention
+    coefficients = flip(Coefficients{i}); % Coefficients flipped to match polyder convention
 
     derivative_coefficients = polyder(coefficients); % Analytical derivative
 
     Coefficients_der{i} = derivative_coefficients; % Store derivative Coefficients
 
     Yfit_der{i} = polyval(derivative_coefficients,t); % Compute Derivative curve
+    
+    derivative_errors(i) = sqrt(mean((Yfit_der{i} - y_true_derivative).^2)); % Find L2 Error for the derivative
+    
 end
+
+% Finding errors
 
 
 
@@ -95,8 +102,13 @@ end
 
 %title("cond(V'V) against polynomial degree");
 
-% -------- L2 Error of polynomial fit ------------
+% ----- L2 Error of polynomial derivative -------
 
+bar(1:maxDeg, derivative_errors)
 
+xlabel('m (polynomial degree)');
+ylabel('Derivative L2 Error');
+
+title('Derivative L2 Error against Polynomial Degree');
 
 
