@@ -107,11 +107,11 @@ end
 
 % ----- L2 Error of polynomial derivative -------
 
-bar(1:maxDeg, derivative_errors)
+h = bar(1:maxDeg, derivative_errors)
 
 xlabel('m (polynomial degree)');
 ylabel('Derivative L2 Error');
 
 title('Derivative L2 Error against Polynomial Degree');
 
-
+waitfor(h)
