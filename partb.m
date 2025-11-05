@@ -66,19 +66,22 @@ derivative_errors = zeros(maxDeg,1);
 % Analytical derivative finding
 for i=1:maxDeg
 
-    coefficients = flip(Coefficients{i}); % Coefficients flipped to match polyder convention
+    % Coefficients flipped to match polyder convention
+    coefficients = flip(Coefficients{i}); 
 
-    derivative_coefficients = polyder(coefficients); % Analytical derivative
+    % Analytical derivative
+    derivative_coefficients = polyder(coefficients);
 
-    Coefficients_der{i} = derivative_coefficients; % Store derivative Coefficients
+    % Store derivative Coefficients
+    Coefficients_der{i} = derivative_coefficients; 
 
-    Yfit_der{i} = polyval(derivative_coefficients,t); % Compute Derivative curve
+    % Compute Derivative curve
+    Yfit_der{i} = polyval(derivative_coefficients,t); 
     
-    derivative_errors(i) = sqrt(mean((Yfit_der{i} - y_true_derivative).^2)); % Find L2 Error for the derivative
+    % Find L2 Error for the derivative
+    derivative_errors(i) = sqrt(mean((Yfit_der{i} - y_true_derivative).^2)); 
     
 end
-
-% Finding errors
 
 
 
